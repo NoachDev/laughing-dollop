@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:laughing_dollop/data.dart';
 import 'package:laughing_dollop/util.dart';
 import 'package:laughing_dollop/widgets/info_server.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key});
@@ -11,7 +13,30 @@ class ServerPage extends StatefulWidget {
 
 class _ServerPageState extends State<ServerPage> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final snackbar = ScaffoldMessenger.of(context).showSnackBar;
+
+    status.then((value) {
+      // audio - [0] , video - [1]
+      if (!value[0] || !value[1]) {
+        snackbar(
+          SnackBar(
+            content: Text(
+                'Without the, ${!value[0] ? "microphone" : !value[1] ? "and" : ""} ${!value[1] ? "camera" : ""}, permitions the server can`t send the data'),
+            duration: Duration(hours: 1),
+            action: SnackBarAction(
+                label: "Open Settings",
+                onPressed: () async => await openAppSettings()),
+          ),
+        );
+      }
+    });
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 1100) {

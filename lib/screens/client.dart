@@ -12,6 +12,10 @@ class ClientPage extends StatefulWidget {
   State<ClientPage> createState() => _ClientPageState();
 }
 
+/// Screen for connect and receive data from [server]
+/// 
+/// For the [clientAudio] connect to the [server] is needed an [ip] and [port] the 
+/// 
 class _ClientPageState extends State<ClientPage> {
   final _formKey = GlobalKey<FormState>();
   late InternetAddress ip;
@@ -19,8 +23,9 @@ class _ClientPageState extends State<ClientPage> {
 
   void connectToServer() {
     try {
-      clientSocket.connect(ip, port);
-      // handle successful connection
+      clientAudio.connect(ip, port);
+      clientMic.connect(ip, port);
+      clientCam.connect(ip, port);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to connect')),
@@ -104,6 +109,9 @@ class _ClientPageState extends State<ClientPage> {
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp("[0-9]"))
                             ],
+                            onSaved: (value) {
+                              port = int.parse(value!);
+                            },
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.surface),
                             validator: FormBuilderValidators.portNumber(

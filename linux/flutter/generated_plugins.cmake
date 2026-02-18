@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  srt_dart
+  record_linux
   srt_flutter_libs
 )
 
