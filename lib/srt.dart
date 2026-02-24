@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:laughing_dollop/data.dart';
 import 'package:laughing_dollop/util.dart';
 import 'package:srt_dart/srt_dart.dart';
 
@@ -14,18 +17,33 @@ bool initilized = false;
 bool connectedToServer = false;
 
 Future<void> initializeSRT() async {
-  final ip = await Configurations.address;
+  late InternetAddress ip;
 
-  server = SrtSocket(options: SocketOptions.liveMode(sender: true));
-  clientAudio = SrtSocket(options: SocketOptions.liveMode(sender: true));
+  if(Platform.isAndroid){
+    ip = InternetAddress.loopbackIPv4;
+  }
+  else{
+    ip = await Configurations.address;
+  }
+
+  /// The SrtSocket set by default the options
+  /// - Live Mode, and
+  /// - Sender: true.
+  /// 
+  server = SrtSocket();
+  clientAudio = SrtSocket();
+  clientMic = SrtSocket();
+  clientCam = SrtSocket();
 
   server.bind(ip, Configurations.port);
-  server.listen();
+  server.listen(backlog: 3);
 
   initilized = true;
 
   audioHandle = await server.accept();
   micHandle = await server.accept();
   camHandle = await server.accept();
+
+  startMicStream();
 
 }

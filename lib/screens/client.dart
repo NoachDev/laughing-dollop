@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:laughing_dollop/data.dart';
 import 'package:laughing_dollop/srt.dart';
 
 class ClientPage extends StatefulWidget {
@@ -21,14 +22,30 @@ class _ClientPageState extends State<ClientPage> {
   late InternetAddress ip;
   late int port;
 
+  @override
+  void dispose() {
+    disposeMicRecv();
+    super.dispose();
+  }
+
   void connectToServer() {
     try {
       clientAudio.connect(ip, port);
       clientMic.connect(ip, port);
       clientCam.connect(ip, port);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Connect Sucessfuly')),
+        snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
+      );
+
+      /// server accept wating ...
+      Future.delayed(Duration(milliseconds: 100)).then((value)=>startMicRecv());
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to connect')),
+        snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
       );
     }
   }
@@ -128,6 +145,7 @@ class _ClientPageState extends State<ClientPage> {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Tried to connect')),
+                            snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
                           );
                           _formKey.currentState!.save();
                           connectToServer();
