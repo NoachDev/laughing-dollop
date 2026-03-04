@@ -8,13 +8,10 @@
 
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
 #include <record_windows/record_windows_plugin_c_api.h>
-#include <srt_flutter_libs/srt_flutter_libs_plugin_c_api.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   PermissionHandlerWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("PermissionHandlerWindowsPlugin"));
   RecordWindowsPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("RecordWindowsPluginCApi"));
-  SrtFlutterLibsPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("SrtFlutterLibsPluginCApi"));
 }

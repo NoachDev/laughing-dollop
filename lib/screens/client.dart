@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:laughing_dollop/data.dart';
+import 'package:laughing_dollop/native/bindings/microphone.dart';
 import 'package:laughing_dollop/srt.dart';
 
 class ClientPage extends StatefulWidget {
@@ -14,44 +15,32 @@ class ClientPage extends StatefulWidget {
 }
 
 /// Screen for connect and receive data from [server]
-/// 
-/// For the [clientAudio] connect to the [server] is needed an [ip] and [port] the 
-/// 
+///
+/// For the [clientAudio] connect to the [server] is needed an [ip] and [port] the
+///
 class _ClientPageState extends State<ClientPage> {
   final _formKey = GlobalKey<FormState>();
   late InternetAddress ip;
   late int port;
 
   @override
-  void dispose() {
-    disposeMicRecv();
-    super.dispose();
-  }
-
-  void connectToServer() {
-    try {
-      clientAudio.connect(ip, port);
-      clientMic.connect(ip, port);
-      clientCam.connect(ip, port);
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Connect Sucessfuly')),
-        snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
-      );
-
-      /// server accept wating ...
-      Future.delayed(Duration(milliseconds: 100)).then((value)=>startMicRecv());
-
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to connect')),
-        snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final showSnackBar = ScaffoldMessenger.of(context).showSnackBar;
+
+    void connectToServer() {
+      try {
+        connect(ip, port).then((e) {
+          showSnackBar(const SnackBar(content: Text('Connect Sucessfuly')),
+              snackBarAnimationStyle:
+                  AnimationStyle(duration: Durations.medium1));
+        });
+      } catch (e) {
+        showSnackBar(const SnackBar(content: Text('Failed to connect')),
+            snackBarAnimationStyle:
+                AnimationStyle(duration: Durations.medium1));
+      }
+    }
+
     return Container(
       color: Theme.of(context).colorScheme.onSurface,
       child: Row(
@@ -144,9 +133,9 @@ class _ClientPageState extends State<ClientPage> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Tried to connect')),
-                            snackBarAnimationStyle: AnimationStyle(duration: Durations.medium1)
-                          );
+                              const SnackBar(content: Text('Tried to connect')),
+                              snackBarAnimationStyle:
+                                  AnimationStyle(duration: Durations.medium1));
                           _formKey.currentState!.save();
                           connectToServer();
                         }

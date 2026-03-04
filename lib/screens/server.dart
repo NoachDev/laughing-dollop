@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:laughing_dollop/data.dart';
+import 'package:laughing_dollop/srt.dart';
 import 'package:laughing_dollop/util.dart';
 import 'package:laughing_dollop/widgets/info_server.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,6 +16,12 @@ class _ServerPageState extends State<ServerPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initServer();
   }
 
   @override
