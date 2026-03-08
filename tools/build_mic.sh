@@ -1,10 +1,9 @@
 native=../lib/native/
-linux=../linux/
-tests=../tests/
+build=${native}/_builded/
 
-gcc -shared -fPIC -o ${native}libvirtual_mic.so ${native}virtual_mic.c $(pkg-config --cflags --libs libpipewire-0.3)
+mkdir -p ${build}
 
-cp -f ${native}libvirtual_mic.so ${linux}
-cp -f ${native}libvirtual_mic.so ${tests}
+gcc -shared -fPIC -o ${build}libvirtual_mic.so ${native}virtual_mic.c ${native}base.c $(pkg-config --cflags --libs libpipewire-0.3)
+gcc -DVMIC_STANDALONE -fPIC -o ${build}mic ${native}virtual_mic.c ${native}base.c $(pkg-config --cflags --libs libpipewire-0.3) -lm &&
 
-rm ${native}libvirtual_mic.so
+${build}mic
