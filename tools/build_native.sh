@@ -5,7 +5,7 @@ build=${native}/_builded/
 
 mkdir -p ${build}
 
-gcc -shared -fPIC -o ${build}lib_native_resources.so ${native}linux/virtual_mic.c ${native}linux/base.c ${build}linux/audio_listener.c $(pkg-config --cflags --libs libpipewire-0.3)
+gcc -shared -fPIC -o ${build}lib_native_resources.so ${native}linux/virtual_mic.c ${native}linux/base.c ${native}linux/audio_listener.c $(pkg-config --cflags --libs libpipewire-0.3)
 
 cp -f ${build}lib_native_resources.so ${linux}
 cp -f ${build}lib_native_resources.so ${tests}

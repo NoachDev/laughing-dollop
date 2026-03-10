@@ -3,57 +3,43 @@
 
 bool initiailized = false;
 uint32_t CHANNELS = 2;
-
-// PipeWiere base functions
-struct pw_main_loop *loop = NULL;
-struct pw_context *context = NULL;
-struct pw_core *core = NULL;
-struct pw_stream *mic_stream = NULL;
-struct pw_stream *audio_stream = NULL;
 struct spa_hook stream_listener;
-struct pw_registry *registry = NULL;
+struct pw_main_loop *loop;
+struct pw_context *context;
+struct pw_core *core;
+struct pw_registry *registry;
 struct pw_thread_loop *thread_loop = NULL;
 
 void start_pipewire(void){
   if (initiailized) return;
-
+  
   pw_init(NULL, NULL); /// start the pipewire.
+  initiailized = true;
 
   loop = pw_main_loop_new(NULL); /// the main function for blok the process
   context = pw_context_new(pw_main_loop_get_loop(loop), NULL, 0);
   core = pw_context_connect(context, NULL, 0);
   registry = pw_core_get_registry(core, PW_VERSION_REGISTRY, 0);
-
-  initiailized = true;
 }
 
-void stop_pipewire(void){
+void stop_pipewire(struct pw_stream *stream, bool close){
   if (!initiailized) return;
 
-  if (thread_loop != NULL){
+  if (thread_loop){
     pw_thread_loop_stop(thread_loop);
     pw_thread_loop_destroy(thread_loop);
   }
 
-  if (mic_stream != NULL){
-    pw_stream_destroy(mic_stream);
-  }
-  if (audio_stream != NULL){
-    pw_stream_destroy(audio_stream);
-  }
-
+  pw_stream_destroy(stream);
   pw_main_loop_destroy(loop);
   pw_context_destroy(context);
   pw_core_disconnect(core);
-  pw_deinit();
-  
-  mic_stream = NULL;
-  audio_stream = NULL;
-  loop = NULL;
-  context = NULL;
-  core = NULL;
-  registry = NULL;
-  initiailized = false;
+
+  if(close){
+    pw_deinit();
+    initiailized = false;
+  }
+
 }
 
 // Stream callbacks

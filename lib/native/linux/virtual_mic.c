@@ -13,9 +13,12 @@
 #include <stdbool.h>
 #include <math.h>
 
+static struct pw_stream *mic_stream = NULL;
+// static struct PipeWireFunctions data;
+
 uint32_t RATE = 48000;
-const char *NODE_MIC_NAME = "virtual_mic_from_c";
-double phase = 0.0;
+static const char *NODE_MIC_NAME = "virtual_mic_from_c";
+static double phase = 0.0;
 
 struct spa_pod *make_audio_format(struct spa_pod_builder *builder){
   return spa_format_audio_raw_build(
@@ -33,12 +36,11 @@ struct spa_pod *make_audio_format(struct spa_pod_builder *builder){
 /// @param frames_count 
 /// @return 
 int write_frames(int16_t *frames_buf, size_t frames_count){
-  if (!mic_stream || !initiailized) return -1;
+  if (!mic_stream) return -1;
   
   struct pw_buffer *b = pw_stream_dequeue_buffer(mic_stream);
   struct spa_buffer *buf;
-  int16_t *dst, val;
-  int i, c;
+  int16_t *dst;
   
   buf = b->buffer;
   
@@ -59,6 +61,8 @@ int write_frames(int16_t *frames_buf, size_t frames_count){
   buf->datas[0].chunk->size = frames_count * stride;
   
   pw_stream_queue_buffer(mic_stream, b);
+
+  return 0;
 
 }
 
@@ -122,8 +126,12 @@ int create_virtual_mic(char *name, bool debug){
     params,
     1
   );
+
+  if (res < 0){
+    return -1;
+  }
   
-  if (thread_loop == NULL){
+  if(!thread_loop){
     if (debug){
       pw_main_loop_run(loop); /// block the process, until pw_main_loop_quit() 
     }
@@ -133,9 +141,16 @@ int create_virtual_mic(char *name, bool debug){
     }
   }
 
+
   return 0;
   
 }
+
+void close_mic(bool closePipeWire){
+  if (!mic_stream) return;
+
+  stop_pipewire(mic_stream, closePipeWire);
+} 
 
 #ifdef VMIC_STANDALONE
 void main(void){
@@ -145,4 +160,4 @@ void main(void){
 #endif
 // mkdir _builded &&
 // gcc -shared -fPIC -o _builded/libvirtual_mic.so virtual_mic.c base.c $(pkg-config --cflags --libs libpipewire-0.3)
-// gcc -DVMIC_STANDALONE -fPIC -o _builded/mic virtual_mic.c base.c $(pkg-config --cflags --libs libpipewire-0.3) -lm
+// gcc -Wall -DVMIC_STANDALONE -fPIC -o ../_builded/mic virtual_mic.c base.c $(pkg-config --cflags --libs libpipewire-0.3) -lm

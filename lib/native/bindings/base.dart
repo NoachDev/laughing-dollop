@@ -10,7 +10,7 @@ ffi.DynamicLibrary loadLibrary(String name) {
   }
 }
 
-class Base{
+abstract class Base{
   static final startP = native
       .lookupFunction<ffi.Void Function(), void Function()>("start_pipewire");
 

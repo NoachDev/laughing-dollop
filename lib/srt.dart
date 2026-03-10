@@ -1,8 +1,10 @@
 import 'dart:ffi' as ffi;
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:laughing_dollop/data.dart';
+import 'package:laughing_dollop/native/bindings/audio_listener.dart';
 import 'package:laughing_dollop/native/bindings/microphone.dart';
 import 'package:laughing_dollop/util.dart';
 import 'package:srt_dart/srt_dart.dart';
@@ -55,7 +57,6 @@ Future<void> connect(InternetAddress ip, int port) async {
   clientCam.connect(ip, port);
 
   epoll.register(clientMic, events: [EpollEventType.read]);
-
 
 }
 

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:laughing_dollop/data.dart';
-import 'package:laughing_dollop/native/bindings/microphone.dart';
 import 'package:laughing_dollop/srt.dart';
 
 class ClientPage extends StatefulWidget {

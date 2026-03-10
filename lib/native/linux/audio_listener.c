@@ -11,15 +11,16 @@
 #include <unistd.h>
 
 const char *NODE_AUDIO_NAME = "virtual_audio_from_c";
+static struct pw_stream *audio_stream = NULL;
 
 /// show the data, debug only
-void audio_debug(uint8_t *data){
+void audio_debug(uint8_t *data, int size){
   printf("buffer %d\n", *data);
 }
 
 /// On have audio send to listener. 
 void on_process_audio(void *data){
-  void (*listener)(uint8_t *data) = data;
+  void (*listener)(uint8_t *data, int size) = data;
 
   struct pw_buffer *b = pw_stream_dequeue_buffer(audio_stream);
   struct spa_buffer *buf;
@@ -46,12 +47,12 @@ void on_process_audio(void *data){
   pw_stream_queue_buffer(audio_stream, b);
 
   if (*p != 0){
-    listener(p);
+    listener(p, n_frames);
   }
 
 }
 
-int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data)){
+int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data, int size)){
   if (audio_stream) return 0; // already created
 
   struct pw_properties *props = pw_properties_new(
@@ -96,7 +97,7 @@ int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data
     params, 1
   );
 
-  if (thread_loop == NULL){
+  if(!thread_loop){
     if (debug){
       pw_main_loop_run(loop); /// block the process, until pw_main_loop_quit() 
     }
@@ -110,6 +111,12 @@ int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data
   return 0;
 }
 
+void close_audio(bool closePipeWire){
+  if (!audio_stream) return;
+
+  stop_pipewire(audio_stream, closePipeWire);
+}
+
 #ifdef AUDIO_STANDALONE
 void main(void){
   start_pipewire();
@@ -118,4 +125,4 @@ void main(void){
 #endif
 
 // gcc -shared -fPIC -o _builded/libaudio_listener.so audio_listener.c base.c $(pkg-config --cflags --libs libpipewire-0.3)
-// gcc -DAUDIO_STANDALONE -fPIC -o _builded/alistener audio_listener.c base.c $(pkg-config --cflags --libs libpipewire-0.3)
+// gcc -DAUDIO_STANDALONE -fPIC -o ../_builded/alistener audio_listener.c base.c $(pkg-config --cflags --libs libpipewire-0.3)
