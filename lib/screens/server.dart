@@ -13,6 +13,8 @@ class ServerPage extends StatefulWidget {
 }
 
 class _ServerPageState extends State<ServerPage> {
+  bool serverInitialized = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -21,28 +23,50 @@ class _ServerPageState extends State<ServerPage> {
   @override
   void initState() {
     super.initState();
-    initServer();
+    serverStatus.then((_){
+      waitClient();
+      
+      setState(() {
+        serverInitialized = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final snackbar = ScaffoldMessenger.of(context).showSnackBar;
 
-    status.then((value) {
-      // audio - [0] , video - [1]
-      if (!value[0] || !value[1]) {
-        snackbar(
-          SnackBar(
-            content: Text(
-                'Without the, ${!value[0] ? "microphone" : !value[1] ? "and" : ""} ${!value[1] ? "camera" : ""}, permitions the server can`t send the data'),
-            duration: Duration(hours: 1),
-            action: SnackBarAction(
-                label: "Open Settings",
-                onPressed: () async => await openAppSettings()),
-          ),
-        );
+    void snackbar(text) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            'Without the, $text, permition the server can`t send the data'),
+        duration: Duration(hours: 1),
+        action: SnackBarAction(
+            label: "Open Settings",
+            onPressed: () async => await openAppSettings()),
+      ));
+    }
+
+    if (serverInitialized){
+      if (micState){
+        startMicStream();
       }
-    });
+      else{
+        newMicState.then((value) {
+        if (value){
+          setState(() {
+            micState = true;
+          });
+        }
+        else{
+          snackbar("microphone");
+        }
+      });
+      }
+
+      if (camState){
+        /// TODO : camera stream
+      }
+    }
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {

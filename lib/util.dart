@@ -19,13 +19,14 @@ abstract class Configurations {
 
       final ipv6 = await info.getWifiIPv6();
 
-      if (ipv6 == null) {
+      /// Android not accept a IPv6 to bind the socket
+      if (ipv6 == null || Platform.isAndroid) {
         final ipv4 = await info.getWifiIP();
 
         if (ipv4 == null) {
           throw Exception("Failed to get the ip address");
         }
-
+        
         return _ipAddress = InternetAddress(ipv4);
       }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:laughing_dollop/data.dart';
-import 'package:laughing_dollop/native/bindings/microphone.dart';
 import 'package:laughing_dollop/screens/client.dart';
 import 'package:laughing_dollop/screens/config.dart';
 import 'package:laughing_dollop/screens/server.dart';
@@ -67,8 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    record.dispose();
-    Microphone.close();
+    // record.dispose();
+    mic.close();
     
     super.dispose();
   }

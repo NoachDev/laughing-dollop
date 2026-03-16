@@ -1,67 +1,51 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:laughing_dollop/native/bindings/audio_listener.dart';
 import 'package:laughing_dollop/native/bindings/microphone.dart';
 import 'package:wav/wav.dart';
 
 void main() async {
-  // /// helper
-  // ///
-  // final wav = await Wav.readFile("tests/sound.wav");
+  /// helper
+  ///
+  final wav = await Wav.readFile("tests/sound.wav");
 
-  // /// the raw pcm16 data in a Uint8List format
-  // ///
-  // final data = await readWavPcm("tests/sound.wav");
+  /// the raw pcm16 data in a Uint8List format
+  ///
+  final data = await readWavPcm("tests/sound.wav");
 
-  // final duration = Duration(milliseconds: 20);
+  final duration = Duration(milliseconds: 20);
 
-  // /// buffer of samples
-  // ///
-  // /// num of samples to directely write on mic
-  // final block = wav.samplesPerSecond / 1000 * duration.inMilliseconds;
-  // final bytePerBlock =
-  //     block.truncate() * 2; // pcm16 -> 16 bits per sample = 2 bytes
+  /// buffer of samples
+  ///
+  /// num of samples to directely write on mic
+  final block = wav.samplesPerSecond / 1000 * duration.inMilliseconds;
+  final bytePerBlock = block.truncate() * 2; // pcm16 -> 16 bits per sample = 2 bytes
 
-  // final split = data.lengthInBytes ~/ bytePerBlock;
+  final split = data.lengthInBytes ~/ bytePerBlock;
+
+  final mic = Microphone();
 
   /// start the microphone.
   ///
   /// 48000 of sample rate
   /// 2 chanels
   ///
-  final mic = Microphone();
-  mic.start();
-  // mic.start(wav.samplesPerSecond);
+  mic.start(wav.samplesPerSecond);
 
-  // print(bytePerBlock);
-  // print(split);
+  print(bytePerBlock);
+  print(split);
 
+  print("start the recorder");
   await Future.delayed(Duration(seconds: 1));
 
-  print("start w");
-
-  double phase = 0;
-  final double inc = 2 * pi / 48000;
-  final List<int> send = [];
-
-  for (var i = 0; i < 1000; i++) {
-    // final send = data.sublist(i * bytePerBlock, (i + 1) * bytePerBlock);
-    final send =
-        List<int>.generate(256, (j) => (sin(phase += inc) * 32767).truncate());
-    Int16List samples16 = Int16List.fromList(send);
-
-    mic.addData = samples16.buffer.asUint8List();
+  for (int i = 0; i < split; i++) {
+    mic.addData = data.sublist(i * bytePerBlock, (i + 1) * bytePerBlock);
   }
 
-  while (mic.queueLength > 0) {
-    await Future.delayed(Duration(seconds: 3));
-    print("loop");
-    print(mic.queueLength);
+  while (true) {
+    await Future.delayed(Duration(seconds: 1));
   }
-  print("finished");
-  
+
 
 }
 
