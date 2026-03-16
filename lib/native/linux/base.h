@@ -7,9 +7,10 @@
 #include <stdbool.h>
 #include <pipewire/pipewire.h>
 
+#define CHANNELS  2
+
 // Configuartions
 extern uint32_t RATE;
-extern uint32_t CHANNELS;
 
 // PipeWiere base functions
 extern struct spa_hook stream_listener;

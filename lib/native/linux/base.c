@@ -2,7 +2,6 @@
 #include <pipewire/pipewire.h>
 
 bool initiailized = false;
-uint32_t CHANNELS = 2;
 struct spa_hook stream_listener;
 struct pw_main_loop *loop;
 struct pw_context *context;

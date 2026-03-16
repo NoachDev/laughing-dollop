@@ -53,6 +53,8 @@ void on_process_audio(void *data){
 }
 
 int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data, int size)){
+  /// TODO : filter the audio sources to remove the pipewire mic_from_c
+   
   if (audio_stream) return 0; // already created
 
   struct pw_properties *props = pw_properties_new(
@@ -84,7 +86,7 @@ int create_audio_listener(char *name, bool debug, void (*listener)(uint8_t *data
     &builder,
     SPA_PARAM_EnumFormat,
     &SPA_AUDIO_INFO_RAW_INIT(
-      .format = SPA_AUDIO_FORMAT_F32
+      .format = SPA_AUDIO_FORMAT_S16_LE
     )
   );
 

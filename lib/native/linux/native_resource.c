@@ -5,8 +5,8 @@
 #ifdef NATIVE_STANDALONE
 void main(void){
   start_pipewire();
+  create_virtual_mic("native_mic", 48000, true);
   create_audio_listener(NULL, true, &audio_debug);
-  create_virtual_mic(NULL, true);
 
 }
 #endif
