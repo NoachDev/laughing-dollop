@@ -36,10 +36,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   form_builder_validators: ^11.0.0
-  srt_dart:
-    path: /mnt/extencion/Projects/srt_dart
   srt_flutter_libs:
-    path: /mnt/extencion/Projects/srt_flutter_libs
+    git:
+      url: https://github.com/NoachDev/srt_flutter_libs.git
+      ref: main # branch name
 
   network_info_plus: ^7.0.0
   permission_handler: ^12.0.1
@@ -58,6 +58,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   wav: ^1.5.0
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
