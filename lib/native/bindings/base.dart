@@ -6,7 +6,7 @@ ffi.DynamicLibrary loadLibrary(String name) {
   try {
     return ffi.DynamicLibrary.open(name);
   } catch (e) {
-    return ffi.DynamicLibrary.open("tests/$name");
+    return ffi.DynamicLibrary.open("test/$name");
   }
 }
 
