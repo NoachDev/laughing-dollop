@@ -54,6 +54,11 @@ android {
     productFlavors {
         create("fdroid") {
             dimension = "deploy"
+            signingConfig = null
+        }
+        create("signed") {
+            dimension = "deploy"
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -68,7 +73,6 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
         }
     }
 

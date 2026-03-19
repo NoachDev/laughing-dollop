@@ -10,7 +10,7 @@ here is a example of using the Srt procol on Dart and a usefull application for 
 
 ## On SRT
 The laughing_dollop application offear simples screens to access and configure sockets SRT.
-This is possible becuse on start the app the SRT is initilized with a dart-frendely method `initializeSrtFlutter` and pre-configurated with `initializeSRT` - where is created the sockets
+This is possible becuse on start the app, the SRT is initilized with a dart-frendely method `initializeSrtFlutter` and pre-configurated with `initializeSRT` - where is created the sockets
 
 ### On acess the server page:
   The `server` socket is bounded and start listen for connections
