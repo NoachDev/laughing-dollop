@@ -1,0 +1,23 @@
+Laughing Dollop is a usefull application for share native resources like the microphone
+through <b>wifi</b>.
+
+You will need install the Laughing Dollop on both device,
+  * where you want share
+  * where you want receive
+
+  see the <a href="https://github.com/NoachDev/laughing-dollop/releases">releases page</a>
+
+On server page you can streming your native resources to multiply devices
+
+On client page you can, with an <b>ip</b> and <b>port</b>, connect to a single server.
+
+Considerations :
+
+This app have limitations:
+  * platforms availables:
+    * linux, client only
+    * android, server only
+
+And, both librarys used on developement Srt and native/* are in a unstable version, so is expected to have issues like a lantecy of 4s .
+
+New versions are incoming, to fix bugs and enchance the user experience.

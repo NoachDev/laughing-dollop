@@ -1,5 +1,5 @@
 name: laughing_dollop
-description: "A new Flutter project."
+description: "Usefull application for share native resources, like the microphone, through wifi"
 repository: https://github.com/NoachDev/laughing-dollop
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
